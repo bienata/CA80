@@ -1,0 +1,1 @@
+putty -serial /dev/ttyS0 -sercfg 9600,8,n,1,N  > /dev/null 2>&1 &

@@ -1,0 +1,7 @@
+EMU=`ls /dev/usb/lp*`
+echo "using ${EMU} port"
+sudo chmod -v 666 $EMU
+#stat -c "%a" $EMU
+sudo cp -v $1 $EMU
+
+
