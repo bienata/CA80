@@ -1,0 +1,18 @@
+#!/bin/bash
+serialPort="--port=/dev/ttyACM0"
+slow="--speed=400"
+fast="--speed=200"
+CA80TP="./ca80typer_pc/ca80typer"
+echo "# wykasowanie pamięci, zlecenie E, zakres c000-c020"
+echo "# klawisze: [M][E][c000][.][c020][.][00][=]"
+echo "./ca80typer ${serialPort} ${slow} --command=\"mmmmme.c000.c020.00=\""
+${CA80TP} ${serialPort} ${slow} --command="mmmmme.c000.c020.00="
+echo " szybkie sprawdzenie zleceniem D czy są zera"
+echo "# klawisze: [M][D][c000][=][=][=][=][=]"
+echo "./ca80typer ${serialPort} ${slow} --command=\"mmmmmd.c000======mm\""
+${CA80TP} ${serialPort} ${slow} --command="mmmmmd.c000======mm"
+echo " wpisanie programiku hello_edw.hex od adresu c000 i uruchomienie"
+echo "# klawisze: [M][D][c000][=][31][=][66][=][ff][=]..."
+echo "# klawisze: [M][G][c000][=]"
+echo "./ca80typer ${serialPort} ${fast} --file=hello_edw.hex --address=c000" 
+${CA80TP} ${serialPort} ${fast} --file=hello_edw.hex --address=c000 

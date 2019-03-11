@@ -1,0 +1,10 @@
+#!/bin/bash
+rm *.lst
+rm *.bin
+rm *.hex
+rm *.sym
+
+for oneAsmSrc in `ls *.asm`; do
+    ./sba ${oneAsmSrc}
+done
+
