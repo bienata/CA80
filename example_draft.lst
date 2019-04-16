@@ -1,0 +1,47 @@
+0000-                  4               .sf example_draft.sym       ; i tablice symboli
+0000-                  5                                           ; plik z deklaracjami
+0000-                  6               .in ca80.inc                ; procedur i stałych
+0000-            I     1                               ; ciagle uzupelniam ...
+00E0-            I     2       USER8255        .eq             $E0
+0000-            I     3       PA                      .eq             0
+0001-            I     4       PB                      .eq             1
+0002-            I     5       PC                      .eq             2
+0003-            I     6       CTRL            .eq             3
+0000-            I     7                               ;
+FFF7-            I     8       CYF0        .eq $FFF7
+FFF8-            I     9       CYF1        .eq $FFF8
+FFF9-            I    10       CYF2        .eq $FFF9
+FFFA-            I    11       CYF3        .eq $FFFA
+FFFB-            I    12       CYF4        .eq $FFFB
+FFFC-            I    13       CYF5        .eq $FFFC
+FFFD-            I    14       CYF6        .eq $FFFD
+FFFE-            I    15       CYF7        .eq $FFFE
+0000-            I    16
+0010-            I    17       CLR                 .eq $0010   ; CLR - kasowanie wyswietlacza
+0018-            I    18       LBYTE       .eq $0018   ; LBYTE - wyswietlenie Aku w HEX
+0020-            I    19       LADR        .eq $0020   ; LADR - wyswietlenie HL w HEX
+022D-            I    20       CZAS        .eq $022D   ; CZAS - pokazuje czas/date
+01AB-            I    21       COM                 .eq $01AB   ; COM - pokazuje znak 7-seg z rejestru C
+01D4-            I    22       PRINT       .eq $01D4   ; PRINT - drukuje komunikat z (HL)
+0213-            I    23       EXPR        .eq $0213   ; EXPR - pobranie ciagu liczb 16bit na stos
+FFC3-            I    24       CSTS        .eq $FFC3   ; CSTS - test czy klawisz nacisniety
+FFC6-            I    25       CI          .eq $FFC6   ; CI - pobranie znaku z klawiatury
+01E0-            I    26       CO          .eq $01E0   ; CO - wyswietlenie cyfry hex
+0000-            I    27                   ;
+00FF-            I    28       EOM         .eq $FF
+0000-            I    29
+0000-            I    30
+0000-                  7                                           ; systemowych
+0000-                  8               .sm     code                ; typowy start kodu uzytkownika
+C000-                  9               .or     $c000               ; bank U12, adres $C000
+C000-                 10               ;
+C000-31 66 FF         11 ( 10)                 ld  SP,$ff66                ; ustawienie stosu
+C003-                 12               ;
+C003-                 13               .co
+C003-                 14               tu dajemy upust swej kreatywności
+C003-                 15               .ec
+C003-                 16               ;
+C003-C3 03 C0         17 ( 10)         jp  $                       ; martwa pętla
+C006-F7               18 ( 11)         rst $30                     ; lub powrót do Monitora
+C007-                 19                       ;
+C007-                 20

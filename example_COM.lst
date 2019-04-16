@@ -1,0 +1,67 @@
+0000-                  4               .sf example_COM.sym
+0000-                  5               .in ca80.inc
+0000-            I     1                               ; ciagle uzupelniam ...
+00E0-            I     2       USER8255        .eq             $E0
+0000-            I     3       PA                      .eq             0
+0001-            I     4       PB                      .eq             1
+0002-            I     5       PC                      .eq             2
+0003-            I     6       CTRL            .eq             3
+0000-            I     7                               ;
+FFF7-            I     8       CYF0        .eq $FFF7
+FFF8-            I     9       CYF1        .eq $FFF8
+FFF9-            I    10       CYF2        .eq $FFF9
+FFFA-            I    11       CYF3        .eq $FFFA
+FFFB-            I    12       CYF4        .eq $FFFB
+FFFC-            I    13       CYF5        .eq $FFFC
+FFFD-            I    14       CYF6        .eq $FFFD
+FFFE-            I    15       CYF7        .eq $FFFE
+0000-            I    16
+0010-            I    17       CLR                 .eq $0010   ; CLR - kasowanie wyswietlacza
+0018-            I    18       LBYTE       .eq $0018   ; LBYTE - wyswietlenie Aku w HEX
+0020-            I    19       LADR        .eq $0020   ; LADR - wyswietlenie HL w HEX
+022D-            I    20       CZAS        .eq $022D   ; CZAS - pokazuje czas/date
+01AB-            I    21       COM                 .eq $01AB   ; COM - pokazuje znak 7-seg z rejestru C
+01D4-            I    22       PRINT       .eq $01D4   ; PRINT - drukuje komunikat z (HL)
+0213-            I    23       EXPR        .eq $0213   ; EXPR - pobranie ciagu liczb 16bit na stos
+FFC3-            I    24       CSTS        .eq $FFC3   ; CSTS - test czy klawisz nacisniety
+FFC6-            I    25       CI          .eq $FFC6   ; CI - pobranie znaku z klawiatury
+01E0-            I    26       CO          .eq $01E0   ; CO - wyswietlenie cyfry hex
+0000-            I    27                   ;
+00FF-            I    28       EOM         .eq $FF
+0000-            I    29
+0000-            I    30
+0000-                  6               .sm code                ;
+C000-                  7               .or $c000               ; U12/C000
+C000-31 66 FF          8 ( 10)                 ld  SP,$ff66                ;
+C003-                  9                       ;
+C003-                 10       .begin
+C003-06 08            11 (  7)                 ld B,semiTableEnd-semiTable ; B-licznik elementów tabeli
+C005-21 1A C0         12 ( 10)                 ld HL,semiTable             ; adres tabeli znaczków
+C008-                 13       .loop
+C008-4E               14 (  7)                 ld C,(HL)                       ; wez element tabeli
+C009-CD AB 01         15 ( 17)                 call COM                    ; pokaż znaczek
+C00C-17               16                       .db $17                     ; pozycja lewa skrajna (7)
+C00D-CD AB 01         17 ( 17)         call COM                    ; pokaż znaczek
+C010-15               18               .db $15                     ; pozycja lewa (5)
+C011-CD 22 C0         19 ( 17)                 call delay                  ; opóznienie
+C014-23               20 (  6)                 inc HL                      ; indeks++
+C015-10 F1            21 ( 8+)                 djnz .loop                  ; while (--licznik)
+C017-C3 03 C0         22 ( 10)                 jp .begin
+C01A-                 23               ;
+C01A-                 24       semiTable:
+C01A-01 02 04 08 
+     10 20 40 80      25               .db $01,$02,$04,$08,$10,$20,$40,$80
+C022-                 26       semiTableEnd:
+C022-                 27               ;
+C022-C5               28 ( 11) delay:  push    BC
+C023-F5               29 ( 11)         push    AF
+C024-06 FF            30 (  7)         ld      B,$FF
+C026-                 31       .delay
+C026-76               32 (  4)         halt            ; 2ms
+C027-10 FD            33 ( 8+)         djnz    .delay  ; while( --B )
+C029-F1               34 ( 10)         pop     AF
+C02A-C1               35 ( 10)         pop     BC
+C02B-C9               36 ( 10)         ret
+C02C-                 37
+C02C-                 38                       ;
+C02C-                 39

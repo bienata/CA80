@@ -1,0 +1,83 @@
+0000-                  4               .sf example_PRINT.sym
+0000-                  5               .in ca80.inc
+0000-            I     1                               ; ciagle uzupelniam ...
+00E0-            I     2       USER8255        .eq             $E0
+0000-            I     3       PA                      .eq             0
+0001-            I     4       PB                      .eq             1
+0002-            I     5       PC                      .eq             2
+0003-            I     6       CTRL            .eq             3
+0000-            I     7                               ;
+FFF7-            I     8       CYF0        .eq $FFF7
+FFF8-            I     9       CYF1        .eq $FFF8
+FFF9-            I    10       CYF2        .eq $FFF9
+FFFA-            I    11       CYF3        .eq $FFFA
+FFFB-            I    12       CYF4        .eq $FFFB
+FFFC-            I    13       CYF5        .eq $FFFC
+FFFD-            I    14       CYF6        .eq $FFFD
+FFFE-            I    15       CYF7        .eq $FFFE
+0000-            I    16
+0010-            I    17       CLR                 .eq $0010   ; CLR - kasowanie wyswietlacza
+0018-            I    18       LBYTE       .eq $0018   ; LBYTE - wyswietlenie Aku w HEX
+0020-            I    19       LADR        .eq $0020   ; LADR - wyswietlenie HL w HEX
+022D-            I    20       CZAS        .eq $022D   ; CZAS - pokazuje czas/date
+01AB-            I    21       COM                 .eq $01AB   ; COM - pokazuje znak 7-seg z rejestru C
+01D4-            I    22       PRINT       .eq $01D4   ; PRINT - drukuje komunikat z (HL)
+0213-            I    23       EXPR        .eq $0213   ; EXPR - pobranie ciagu liczb 16bit na stos
+FFC3-            I    24       CSTS        .eq $FFC3   ; CSTS - test czy klawisz nacisniety
+FFC6-            I    25       CI          .eq $FFC6   ; CI - pobranie znaku z klawiatury
+01E0-            I    26       CO          .eq $01E0   ; CO - wyswietlenie cyfry hex
+0000-            I    27                   ;
+00FF-            I    28       EOM         .eq $FF
+0000-            I    29
+0000-            I    30
+0000-                  6       ADDR_LO .eq 0
+0001-                  7       ADDR_HI .eq 1
+0000-                  8               .sm code                    ;
+C000-                  9               .or $c000                   ; U12/C000
+C000-31 66 FF         10 ( 10)                 ld  SP,$ff66                ;
+C003-                 11                       ;
+C003-                 12       .begin
+C003-DD 21 1F C0      13 ( 14)         ld IX,messageTable          ; adres tabeli komunikatów
+C007-06 03            14 (  7)         ld B,messageTableLength     ; licznik komunikatów
+C009-                 15       .loop
+C009-DD 6E 00         16 ( 19)                 ld L,(IX+ADDR_LO)                 ; do HL adres wybranego via wskaznik
+C00C-DD 66 01         17 ( 19)         ld H,(IX+ADDR_HI)                 ; z IX komunikatu w kolejności LSB, MSB
+C00F-CD D4 01         18 ( 17)                 call PRINT                  ; pokaż znaki
+C012-80               19                       .db $80                     ; na cały wyświetlacz
+C013-CD 40 C0         20 ( 17)                 call delay                  ; opóznienie
+C016-DD 23            21 ( 10)         inc IX                      ;
+C018-DD 23            22 ( 10)         inc IX                      ; IX += 2 kolejny wskaźnik
+C01A-10 ED            23 ( 8+)         djnz .loop                  ; while(--licznik)
+C01C-C3 03 C0         24 ( 10)                 jp .begin
+C01F-                 25                       ;
+C01F-                 26       messageTable:
+C01F-25 C0            27               .dw message1
+C021-2E C0            28               .dw message2
+C023-37 C0            29               .dw message3
+0003-                 30       messageTableLength  .eq $-messageTable/2
+C025-                 31                       ;
+C025-                 32       message1:
+C025-00 00 00 74 
+     79 38 38 5C 
+     FF               33               .db     $00,$00,$00, $74, $79, $38, $38, $5c, EOM
+C02E-                 34       message2:
+C02E-5C 5C 5C 5C 
+     00 00 00 00 
+     FF               35               .db     $5c,$5c,$5c, $5c, $00, $00, $00, $00, EOM
+C037-                 36       message3:
+C037-00 00 00 00 
+     5C 5C 5C 5C 
+     FF               37               .db     $00, $00, $00, $00, $5c,$5c,$5c, $5c, EOM
+C040-                 38               ;
+C040-C5               39 ( 11) delay:  push    BC
+C041-F5               40 ( 11)         push    AF
+C042-06 FF            41 (  7)         ld      B,$FF
+C044-                 42       .delay
+C044-76               43 (  4)         halt            ; 2ms
+C045-10 FD            44 ( 8+)         djnz    .delay  ; while( --B )
+C047-F1               45 ( 10)         pop     AF
+C048-C1               46 ( 10)         pop     BC
+C049-C9               47 ( 10)         ret
+C04A-                 48
+C04A-                 49                       ;
+C04A-                 50
