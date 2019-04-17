@@ -1,0 +1,108 @@
+0000-                  4               .sf example_PARAM.sym
+0000-                  5               .in ca80.inc
+0000-            I     1                               ; ciagle uzupelniam ...
+00E0-            I     2       USER8255        .eq             $E0
+0000-            I     3       PA                      .eq             0
+0001-            I     4       PB                      .eq             1
+0002-            I     5       PC                      .eq             2
+0003-            I     6       CTRL            .eq             3
+0000-            I     7                               ;
+FFF7-            I     8       CYF0        .eq $FFF7
+FFF8-            I     9       CYF1        .eq $FFF8
+FFF9-            I    10       CYF2        .eq $FFF9
+FFFA-            I    11       CYF3        .eq $FFFA
+FFFB-            I    12       CYF4        .eq $FFFB
+FFFC-            I    13       CYF5        .eq $FFFC
+FFFD-            I    14       CYF6        .eq $FFFD
+FFFE-            I    15       CYF7        .eq $FFFE
+0000-            I    16
+0010-            I    17       CLR                 .eq $0010   ; CLR - kasowanie wyswietlacza
+0018-            I    18       LBYTE       .eq $0018   ; LBYTE - wyswietlenie Aku w HEX
+0020-            I    19       LADR        .eq $0020   ; LADR - wyswietlenie HL w HEX
+022D-            I    20       CZAS        .eq $022D   ; CZAS - pokazuje czas/date
+01AB-            I    21       COM                 .eq $01AB   ; COM - pokazuje znak 7-seg z rejestru C
+01D4-            I    22       PRINT       .eq $01D4   ; PRINT - drukuje komunikat z (HL)
+0213-            I    23       EXPR        .eq $0213   ; EXPR - pobranie ciagu liczb 16bit na stos
+FFC3-            I    24       CSTS        .eq $FFC3   ; CSTS - test czy klawisz nacisniety
+FFC6-            I    25       CI          .eq $FFC6   ; CI - pobranie znaku z klawiatury
+01E0-            I    26       CO          .eq $01E0   ; CO - wyswietlenie cyfry hex
+0007-            I    27       TI          .eq $0007   ; TI - pobranie znaku z echem
+01F4-            I    28       PARAM       .eq $01F4   ; PARAM - pobranie liczby 16-bit do HL z echem
+0000-            I    29                   ;
+00FF-            I    30       EOM         .eq $FF
+0000-            I    31
+0000-            I    32
+0000-                  6               .sm code                    ;
+C000-                  7               .or $c000                   ; U12/C000
+C000-                  8               ;
+0000-                  9       ADDR_LO .eq 0
+0001-                 10       ADDR_HI .eq 1
+C000-31 66 FF         11 ( 10)                 ld  SP,$ff66                ;
+C003-                 12       .begin
+C003-21 5B C0         13 ( 10)         ld HL,addrPrompt            ; "Adr=____"
+C006-CD D4 01         14 ( 17)         call PRINT
+C009-80               15               .db $80                     ; pokaż po lewo
+C00A-CD F4 01         16 ( 17)         call PARAM
+C00D-40               17               .db $40
+C00E-30 F3            18 ( 7+)         jr NC,.begin                ; jak nie [=] to kontynuuj
+C010-                 19               ; po [=] w HL mamy wprowadzony 16 bit adres
+C010-7C               20 (  4)         ld A,H
+C011-E6 C0            21 (  7)         and $C0             ; zostaw dwa najstarsze bity
+C013-07               22 (  4)         rlca                ; z wartości NNxx.xxxx zawijamy
+C014-07               23 (  4)         rlca                ; << i jest xxxx.xxNN
+C015-E6 03            24 (  7)         and $03             ;
+C017-                 25               ; tu A jest numerem komunikatu (nazwy banku) 0..3
+C017-87               26 (  4)         add A               ; a := a*2, adresy są dwubajtowe
+C018-21 2F C0         27 ( 10)         ld  HL,bankNamesArray
+C01B-85               28 (  4)         add L               ; wylicz adres nazwy banku
+C01C-6F               29 (  4)         ld L,A
+C01D-E5               30 ( 11)         push HL             ; dziki transfer 16bit
+C01E-DD E1            31 ( 14)         pop  IX             ;
+C020-DD 6E 00         32 ( 19)         ld  L,(IX+ADDR_LO)  ; pobierz ptr na komunikat
+C023-DD 66 01         33 ( 19)         ld  H,(IX+ADDR_HI)  ; po kawałku
+C026-CD D4 01         34 ( 17)         call PRINT          ; i pokaż
+C029-80               35               .db $80
+C02A-CD 64 C0         36 ( 17)         call delay
+C02D-18 D4            37 ( 12)         jr  .begin           ; i nazat
+C02F-                 38               ;
+C02F-                 39       bankNamesArray:
+C02F-37 C0            40               .dw socketU9            ; "U9___rom"
+C031-40 C0            41               .dw socketU10           ; "U10__rAm"
+C033-49 C0            42               .dw socketU11           ; "U11__rAm"
+C035-52 C0            43               .dw socketU12           ; "U12__rAm"
+C037-                 44               ;
+C037-                 45       socketU9:
+C037-3E 6F 00 00 
+     00 50 5C 54 
+     FF               46               .db $3e,$6f,$00,$00,$00,$50,$5c,$54,EOM
+C040-                 47       socketU10:
+C040-3E 06 3F 00 
+     00 50 77 54 
+     FF               48               .db $3e,$06,$3f,$00,$00,$50,$77,$54,EOM
+C049-                 49       socketU11:
+C049-3E 06 06 00 
+     00 50 77 54 
+     FF               50               .db $3e,$06,$06,$00,$00,$50,$77,$54,EOM
+C052-                 51       socketU12:
+C052-3E 06 5B 00 
+     00 50 77 54 
+     FF               52               .db $3e,$06,$5b,$00,$00,$50,$77,$54,EOM
+C05B-                 53       addrPrompt:
+C05B-77 5E 50 48 
+     00 00 00 00 
+     FF               54               .db $77,$5e,$50,$48,$00,$00,$00,$00,EOM
+C064-                 55               ;
+C064-C5               56 ( 11) delay:  push    BC
+C065-F5               57 ( 11)         push    AF
+C066-06 FF            58 (  7)         ld      B,$FF
+C068-                 59       .delay
+C068-76               60 (  4)         halt            ; 2ms
+C069-76               61 (  4)         halt            ; 2ms
+C06A-76               62 (  4)         halt            ; 2ms
+C06B-10 FB            63 ( 8+)         djnz    .delay  ; while( --B )
+C06D-F1               64 ( 10)         pop     AF
+C06E-C1               65 ( 10)         pop     BC
+C06F-C9               66 ( 10)         ret
+C070-                 67
+C070-                 68                       ;
+C070-                 69

@@ -24,6 +24,8 @@ EXPR        .eq $0213   ; EXPR - pobranie ciagu liczb 16bit na stos
 CSTS        .eq $FFC3   ; CSTS - test czy klawisz nacisniety
 CI          .eq $FFC6   ; CI - pobranie znaku z klawiatury
 CO          .eq $01E0   ; CO - wyswietlenie cyfry hex
+TI          .eq $0007   ; TI - pobranie znaku z echem
+PARAM       .eq $01F4   ; PARAM - pobranie liczby 16-bit do HL z echem
             ;
 EOM         .eq $FF            
 

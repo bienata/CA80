@@ -1,0 +1,72 @@
+0000-                  4               .sf example_CI.sym
+0000-                  5               .in ca80.inc
+0000-            I     1                               ; ciagle uzupelniam ...
+00E0-            I     2       USER8255        .eq             $E0
+0000-            I     3       PA                      .eq             0
+0001-            I     4       PB                      .eq             1
+0002-            I     5       PC                      .eq             2
+0003-            I     6       CTRL            .eq             3
+0000-            I     7                               ;
+FFF7-            I     8       CYF0        .eq $FFF7
+FFF8-            I     9       CYF1        .eq $FFF8
+FFF9-            I    10       CYF2        .eq $FFF9
+FFFA-            I    11       CYF3        .eq $FFFA
+FFFB-            I    12       CYF4        .eq $FFFB
+FFFC-            I    13       CYF5        .eq $FFFC
+FFFD-            I    14       CYF6        .eq $FFFD
+FFFE-            I    15       CYF7        .eq $FFFE
+0000-            I    16
+0010-            I    17       CLR                 .eq $0010   ; CLR - kasowanie wyswietlacza
+0018-            I    18       LBYTE       .eq $0018   ; LBYTE - wyswietlenie Aku w HEX
+0020-            I    19       LADR        .eq $0020   ; LADR - wyswietlenie HL w HEX
+022D-            I    20       CZAS        .eq $022D   ; CZAS - pokazuje czas/date
+01AB-            I    21       COM                 .eq $01AB   ; COM - pokazuje znak 7-seg z rejestru C
+01D4-            I    22       PRINT       .eq $01D4   ; PRINT - drukuje komunikat z (HL)
+0213-            I    23       EXPR        .eq $0213   ; EXPR - pobranie ciagu liczb 16bit na stos
+FFC3-            I    24       CSTS        .eq $FFC3   ; CSTS - test czy klawisz nacisniety
+FFC6-            I    25       CI          .eq $FFC6   ; CI - pobranie znaku z klawiatury
+01E0-            I    26       CO          .eq $01E0   ; CO - wyswietlenie cyfry hex
+0000-            I    27                   ;
+00FF-            I    28       EOM         .eq $FF
+0000-            I    29
+0000-            I    30
+0000-                  6               .sm code                    ;
+C000-                  7               .or $c000                   ; U12/C000
+C000-                  8               ;
+0080-                  9       CODE_DOT    .eq     $80             ; .
+0048-                 10       CODE_EQU    .eq     $48             ; =
+C000-31 66 FF         11 ( 10)                 ld  SP,$ff66                ;
+C003-                 12       .begin
+C003-CD 10 00         13 ( 17)                 call CLR
+C006-80               14                       .db $80                     ; na cały wyświetlacz
+C007-CD C6 FF         15 ( 17)         call CI                     ; pobierz znaczek z kbd
+C00A-28 09            16 ( 7+)         jr Z,.dotOrEual             ; [.] lub [=]
+C00C-                 17               ;cała raszta, kod znaku jest w Aku :)
+C00C-CD 18 00         18 ( 17)         call LBYTE
+C00F-20               19               .db $20
+C010-CD 24 C0         20 ( 17)         call delay
+C013-18 EE            21 ( 12)         jr .begin
+C015-                 22               ; obsluga .=
+C015-                 23       .dotOrEual:
+C015-0E 48            24 (  7)         ld  C,CODE_EQU       ; może ustaw =
+C017-38 02            25 ( 7+)         jr  C,.dotOrEualNext
+C019-0E 80            26 (  7)         ld  C,CODE_DOT       ; a jednak ustaw .
+C01B-                 27       .dotOrEualNext
+C01B-CD AB 01         28 ( 17)         call COM             ; pokaż kod 7-seg
+C01E-10               29               .db $10
+C01F-CD 24 C0         30 ( 17)         call delay
+C022-18 DF            31 ( 12)         jr  .begin           ; i nazat
+C024-                 32               ;
+C024-                 33               ;
+C024-C5               34 ( 11) delay:  push    BC
+C025-F5               35 ( 11)         push    AF
+C026-06 FF            36 (  7)         ld      B,$FF
+C028-                 37       .delay
+C028-76               38 (  4)         halt            ; 2ms
+C029-10 FD            39 ( 8+)         djnz    .delay  ; while( --B )
+C02B-F1               40 ( 10)         pop     AF
+C02C-C1               41 ( 10)         pop     BC
+C02D-C9               42 ( 10)         ret
+C02E-                 43
+C02E-                 44                       ;
+C02E-                 45
