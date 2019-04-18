@@ -39,7 +39,7 @@ C000-                  8               ;
 0001-                 10       ADDR_HI .eq 1
 C000-31 66 FF         11 ( 10)                 ld  SP,$ff66                ;
 C003-                 12       .begin
-C003-21 5B C0         13 ( 10)         ld HL,addrPrompt            ; "Adr=____"
+C003-21 59 C0         13 ( 10)         ld HL,addrPrompt            ; "Adr=____"
 C006-CD D4 01         14 ( 17)         call PRINT
 C009-80               15               .db $80                     ; pokaż po lewo
 C00A-CD F4 01         16 ( 17)         call PARAM
@@ -47,62 +47,61 @@ C00D-40               17               .db $40
 C00E-30 F3            18 ( 7+)         jr NC,.begin                ; jak nie [=] to kontynuuj
 C010-                 19               ; po [=] w HL mamy wprowadzony 16 bit adres
 C010-7C               20 (  4)         ld A,H
-C011-E6 C0            21 (  7)         and $C0             ; zostaw dwa najstarsze bity
-C013-07               22 (  4)         rlca                ; z wartości NNxx.xxxx zawijamy
-C014-07               23 (  4)         rlca                ; << i jest xxxx.xxNN
-C015-E6 03            24 (  7)         and $03             ;
-C017-                 25               ; tu A jest numerem komunikatu (nazwy banku) 0..3
-C017-87               26 (  4)         add A               ; a := a*2, adresy są dwubajtowe
-C018-21 2F C0         27 ( 10)         ld  HL,bankNamesArray
-C01B-85               28 (  4)         add L               ; wylicz adres nazwy banku
-C01C-6F               29 (  4)         ld L,A
-C01D-E5               30 ( 11)         push HL             ; dziki transfer 16bit
-C01E-DD E1            31 ( 14)         pop  IX             ;
-C020-DD 6E 00         32 ( 19)         ld  L,(IX+ADDR_LO)  ; pobierz ptr na komunikat
-C023-DD 66 01         33 ( 19)         ld  H,(IX+ADDR_HI)  ; po kawałku
-C026-CD D4 01         34 ( 17)         call PRINT          ; i pokaż
-C029-80               35               .db $80
-C02A-CD 64 C0         36 ( 17)         call delay
-C02D-18 D4            37 ( 12)         jr  .begin           ; i nazat
-C02F-                 38               ;
-C02F-                 39       bankNamesArray:
-C02F-37 C0            40               .dw socketU9            ; "U9___rom"
-C031-40 C0            41               .dw socketU10           ; "U10__rAm"
-C033-49 C0            42               .dw socketU11           ; "U11__rAm"
-C035-52 C0            43               .dw socketU12           ; "U12__rAm"
-C037-                 44               ;
-C037-                 45       socketU9:
-C037-3E 6F 00 00 
+C011-07               21 (  4)         rlca                ; z wartości NNxx.xxxx zawijamy
+C012-07               22 (  4)         rlca                ; << i jest xxxx.xxNN
+C013-E6 03            23 (  7)         and $03             ;
+C015-                 24               ; tu A jest numerem komunikatu (nazwy banku) 0..3
+C015-87               25 (  4)         add A               ; a := a*2, adresy są dwubajtowe
+C016-21 2D C0         26 ( 10)         ld  HL,bankNamesArray
+C019-85               27 (  4)         add L               ; wylicz adres nazwy banku
+C01A-6F               28 (  4)         ld L,A
+C01B-E5               29 ( 11)         push HL             ; dziki transfer 16bit
+C01C-DD E1            30 ( 14)         pop  IX             ;
+C01E-DD 6E 00         31 ( 19)         ld  L,(IX+ADDR_LO)  ; pobierz ptr na komunikat
+C021-DD 66 01         32 ( 19)         ld  H,(IX+ADDR_HI)  ; po kawałku
+C024-CD D4 01         33 ( 17)         call PRINT          ; i pokaż
+C027-80               34               .db $80
+C028-CD 62 C0         35 ( 17)         call delay
+C02B-18 D6            36 ( 12)         jr  .begin           ; i nazat
+C02D-                 37               ;
+C02D-                 38       bankNamesArray:
+C02D-35 C0            39               .dw socketU9            ; "U9___rom"
+C02F-3E C0            40               .dw socketU10           ; "U10__rAm"
+C031-47 C0            41               .dw socketU11           ; "U11__rAm"
+C033-50 C0            42               .dw socketU12           ; "U12__rAm"
+C035-                 43               ;
+C035-                 44       socketU9:
+C035-3E 6F 00 00 
      00 50 5C 54 
-     FF               46               .db $3e,$6f,$00,$00,$00,$50,$5c,$54,EOM
-C040-                 47       socketU10:
-C040-3E 06 3F 00 
+     FF               45               .db $3e,$6f,$00,$00,$00,$50,$5c,$54,EOM
+C03E-                 46       socketU10:
+C03E-3E 06 3F 00 
      00 50 77 54 
-     FF               48               .db $3e,$06,$3f,$00,$00,$50,$77,$54,EOM
-C049-                 49       socketU11:
-C049-3E 06 06 00 
+     FF               47               .db $3e,$06,$3f,$00,$00,$50,$77,$54,EOM
+C047-                 48       socketU11:
+C047-3E 06 06 00 
      00 50 77 54 
-     FF               50               .db $3e,$06,$06,$00,$00,$50,$77,$54,EOM
-C052-                 51       socketU12:
-C052-3E 06 5B 00 
+     FF               49               .db $3e,$06,$06,$00,$00,$50,$77,$54,EOM
+C050-                 50       socketU12:
+C050-3E 06 5B 00 
      00 50 77 54 
-     FF               52               .db $3e,$06,$5b,$00,$00,$50,$77,$54,EOM
-C05B-                 53       addrPrompt:
-C05B-77 5E 50 48 
+     FF               51               .db $3e,$06,$5b,$00,$00,$50,$77,$54,EOM
+C059-                 52       addrPrompt:
+C059-77 5E 50 48 
      00 00 00 00 
-     FF               54               .db $77,$5e,$50,$48,$00,$00,$00,$00,EOM
-C064-                 55               ;
-C064-C5               56 ( 11) delay:  push    BC
-C065-F5               57 ( 11)         push    AF
-C066-06 FF            58 (  7)         ld      B,$FF
-C068-                 59       .delay
-C068-76               60 (  4)         halt            ; 2ms
-C069-76               61 (  4)         halt            ; 2ms
-C06A-76               62 (  4)         halt            ; 2ms
-C06B-10 FB            63 ( 8+)         djnz    .delay  ; while( --B )
-C06D-F1               64 ( 10)         pop     AF
-C06E-C1               65 ( 10)         pop     BC
-C06F-C9               66 ( 10)         ret
-C070-                 67
-C070-                 68                       ;
-C070-                 69
+     FF               53               .db $77,$5e,$50,$48,$00,$00,$00,$00,EOM
+C062-                 54               ;
+C062-C5               55 ( 11) delay:  push    BC
+C063-F5               56 ( 11)         push    AF
+C064-06 FF            57 (  7)         ld      B,$FF
+C066-                 58       .delay
+C066-76               59 (  4)         halt            ; 2ms
+C067-76               60 (  4)         halt            ; 2ms
+C068-76               61 (  4)         halt            ; 2ms
+C069-10 FB            62 ( 8+)         djnz    .delay  ; while( --B )
+C06B-F1               63 ( 10)         pop     AF
+C06C-C1               64 ( 10)         pop     BC
+C06D-C9               65 ( 10)         ret
+C06E-                 66
+C06E-                 67                       ;
+C06E-                 68

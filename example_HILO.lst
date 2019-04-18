@@ -1,0 +1,105 @@
+0000-                  4               .sf example_HILO.sym
+0000-                  5               .in ca80.inc
+0000-            I     1                               ; ciagle uzupelniam ...
+00E0-            I     2       USER8255        .eq             $E0
+0000-            I     3       PA                      .eq             0
+0001-            I     4       PB                      .eq             1
+0002-            I     5       PC                      .eq             2
+0003-            I     6       CTRL            .eq             3
+0000-            I     7                               ;
+FFF7-            I     8       CYF0        .eq $FFF7
+FFF8-            I     9       CYF1        .eq $FFF8
+FFF9-            I    10       CYF2        .eq $FFF9
+FFFA-            I    11       CYF3        .eq $FFFA
+FFFB-            I    12       CYF4        .eq $FFFB
+FFFC-            I    13       CYF5        .eq $FFFC
+FFFD-            I    14       CYF6        .eq $FFFD
+FFFE-            I    15       CYF7        .eq $FFFE
+0000-            I    16
+0010-            I    17       CLR                 .eq $0010   ; CLR - kasowanie wyswietlacza
+0018-            I    18       LBYTE       .eq $0018   ; LBYTE - wyswietlenie Aku w HEX
+0020-            I    19       LADR        .eq $0020   ; LADR - wyswietlenie HL w HEX
+022D-            I    20       CZAS        .eq $022D   ; CZAS - pokazuje czas/date
+01AB-            I    21       COM                 .eq $01AB   ; COM - pokazuje znak 7-seg z rejestru C
+01D4-            I    22       PRINT       .eq $01D4   ; PRINT - drukuje komunikat z (HL)
+0213-            I    23       EXPR        .eq $0213   ; EXPR - pobranie ciagu liczb 16bit na stos
+FFC3-            I    24       CSTS        .eq $FFC3   ; CSTS - test czy klawisz nacisniety
+FFC6-            I    25       CI          .eq $FFC6   ; CI - pobranie znaku z klawiatury
+01E0-            I    26       CO          .eq $01E0   ; CO - wyswietlenie cyfry hex
+0007-            I    27       TI          .eq $0007   ; TI - pobranie znaku z echem
+01F4-            I    28       PARAM       .eq $01F4   ; PARAM - pobranie liczby 16-bit do HL z echem
+023B-            I    29       HILO        .eq $023b   ; HILO - iterator, HL++, CY = !(DE >= HL)
+0000-            I    30                   ;
+00FF-            I    31       EOM         .eq $FF
+0000-            I    32
+0000-            I    33
+0000-                  6               .in utilities.inc           ; wszelkie przydasie
+0000-            I     1                       ;
+0000-            I     2       ADDR_LO         .eq 0
+0001-            I     3       ADDR_HI         .eq 1
+0000-            I     4                       ;
+0000-            I     5                       ;--------------------------------------------
+0000-            I     6                       ;  makra dla tabel
+0000-            I     7       BEGINARRAY      .MA   arrayName
+0000-            I     8       ]1:
+0000-            I     9                                       .EM
+0000-            I    10                                       ;
+0000-            I    11       ENDARRAY        .MA   arrayName,itemSize
+0000-            I    12       ]1End:
+0000-            I    13       ]1Size                  .eq      ]1End-]1
+0000-            I    14       ]1Count                 .eq      ]1Size/]2
+0000-            I    15       ]1Last          .eq  ]1End-]2
+0000-            I    16                                       .EM
+0000-            I    17                       ;
+0000-            I    18                       ;--------------------------------------------
+0000-            I    19                       ;
+0000-                  7               .sm code                    ;
+C000-                  8               .or $c000                   ; U12/C000
+C000-                  9               ;
+C000-31 66 FF         10 ( 10)                 ld  SP,$ff66                ;
+C003-                 11       .begin
+C003-0E 03            12 (  7)         ld C,3                      ; beginAddr, endAddr, destAddr
+C005-CD 13 02         13 ( 17)         call EXPR
+C008-40               14               .db $40
+C009-                 15               ; na stosie w kolejnosci dest,end,begin
+C009-DD E1            16 ( 14)         pop IX          ; dest
+C00B-D1               17 ( 10)         pop DE          ; end
+C00C-E1               18 ( 10)         pop HL          ; begin
+C00D-                 19       .memCopy:
+C00D-7E               20 (  7)         ld  A,(HL)
+C00E-CD 26 C0         21 ( 17)         call    showProgress
+C011-DD 77 00         22 ( 19)         ld  (IX),A
+C014-DD 23            23 ( 10)         inc IX          ; dest++
+C016-CD 35 C0         24 ( 17)         call    delay
+C019-CD 3B 02         25 ( 17)         call    HILO    ; begin++
+C01C-D2 0D C0         26 ( 10)         jp NC,.memCopy
+C01F-                 27               ;
+C01F-CD 10 00         28 ( 17)         call    CLR
+C022-80               29               .db     $80
+C023-                 30               ;
+C023-C3 23 C0         31 ( 10)         jp  $
+C026-                 32               ; pokaz ADDR__NN podczas kopiowania
+C026-                 33       showProgress:
+C026-F5               34 ( 11)         push    AF
+C027-E5               35 ( 11)         push    HL
+C028-D5               36 ( 11)         push    DE
+C029-CD 18 00         37 ( 17)         call    LBYTE
+C02C-20               38               .db     $20
+C02D-CD 20 00         39 ( 17)         call    LADR
+C030-44               40               .db     $44
+C031-D1               41 ( 10)         pop     DE
+C032-E1               42 ( 10)         pop     HL
+C033-F1               43 ( 10)         pop     AF
+C034-C9               44 ( 10)         ret
+C035-                 45               ;
+C035-C5               46 ( 11) delay:  push    BC
+C036-F5               47 ( 11)         push    AF
+C037-06 40            48 (  7)         ld      B,$40
+C039-                 49       .delay
+C039-76               50 (  4)         halt            ; 2ms
+C03A-10 FD            51 ( 8+)         djnz    .delay  ; while( --B )
+C03C-F1               52 ( 10)         pop     AF
+C03D-C1               53 ( 10)         pop     BC
+C03E-C9               54 ( 10)         ret
+C03F-                 55               ;
+C03F-                 56

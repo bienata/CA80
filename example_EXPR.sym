@@ -1,0 +1,40 @@
+ADDR_HI         .EQ     $00000001   RefCount=  2, Mem=Code, Source=utilities.inc 
+ADDR_LO         .EQ     $00000000   RefCount=  2, Mem=Code, Source=utilities.inc 
+CI              .EQ     $0000FFC6   RefCount=  0, Mem=Code, Source=ca80.inc 
+CLR             .EQ     $00000010   RefCount=  0, Mem=Code, Source=ca80.inc 
+CO              .EQ     $000001E0   RefCount=  0, Mem=Code, Source=ca80.inc 
+COM             .EQ     $000001AB   RefCount=  1, Mem=Code, Source=ca80.inc 
+CSTS            .EQ     $0000FFC3   RefCount=  0, Mem=Code, Source=ca80.inc 
+CTRL            .EQ     $00000003   RefCount=  0, Mem=Code, Source=ca80.inc 
+CYF0            .EQ     $0000FFF7   RefCount=  0, Mem=Code, Source=ca80.inc 
+CYF1            .EQ     $0000FFF8   RefCount=  0, Mem=Code, Source=ca80.inc 
+CYF2            .EQ     $0000FFF9   RefCount=  0, Mem=Code, Source=ca80.inc 
+CYF3            .EQ     $0000FFFA   RefCount=  0, Mem=Code, Source=ca80.inc 
+CYF4            .EQ     $0000FFFB   RefCount=  0, Mem=Code, Source=ca80.inc 
+CYF5            .EQ     $0000FFFC   RefCount=  0, Mem=Code, Source=ca80.inc 
+CYF6            .EQ     $0000FFFD   RefCount=  0, Mem=Code, Source=ca80.inc 
+CYF7            .EQ     $0000FFFE   RefCount=  0, Mem=Code, Source=ca80.inc 
+CZAS            .EQ     $0000022D   RefCount=  0, Mem=Code, Source=ca80.inc 
+DELAY           .EQ     $0000C059   RefCount=  1, Mem=Code, Source=example_EXPR.asm 
+.DELAY          .EQ     $0000C05D   RefCount=  1, Mem=Code, Source=example_EXPR.asm 
+.BEGIN          .EQ     $0000C003   RefCount=  0, Mem=Code, Source=example_EXPR.asm 
+.SAVEPARAMS     .EQ     $0000C016   RefCount=  1, Mem=Code, Source=example_EXPR.asm 
+.SHOWLOOP       .EQ     $0000C023   RefCount=  1, Mem=Code, Source=example_EXPR.asm 
+.SHOWPARAMS     .EQ     $0000C025   RefCount=  1, Mem=Code, Source=example_EXPR.asm 
+EOM             .EQ     $000000FF   RefCount=  1, Mem=Code, Source=ca80.inc 
+EXPR            .EQ     $00000213   RefCount=  1, Mem=Code, Source=ca80.inc 
+LADR            .EQ     $00000020   RefCount=  1, Mem=Code, Source=ca80.inc 
+LBYTE           .EQ     $00000018   RefCount=  1, Mem=Code, Source=ca80.inc 
+PA              .EQ     $00000000   RefCount=  0, Mem=Code, Source=ca80.inc 
+PARAM           .EQ     $000001F4   RefCount=  0, Mem=Code, Source=ca80.inc 
+PARAMETERSARRAY .EQ     $00008000   RefCount=  2, Mem=RAM , Source=example_EXPR.asm 
+PARAMETERSARRAYCOUNT .EQ     $00000004   RefCount=  4, Mem=RAM , Source=example_EXPR.asm 
+PARAMETERSARRAYEND .EQ     $00008008   RefCount=  2, Mem=RAM , Source=example_EXPR.asm 
+PARAMETERSARRAYLAST .EQ     $00008006   RefCount=  1, Mem=RAM , Source=example_EXPR.asm 
+PARAMETERSARRAYSIZE .EQ     $00000008   RefCount=  1, Mem=RAM , Source=example_EXPR.asm 
+PARAMPROMPT     .EQ     $0000C050   RefCount=  1, Mem=Code, Source=example_EXPR.asm 
+PB              .EQ     $00000001   RefCount=  0, Mem=Code, Source=ca80.inc 
+PC              .EQ     $00000002   RefCount=  0, Mem=Code, Source=ca80.inc 
+PRINT           .EQ     $000001D4   RefCount=  1, Mem=Code, Source=ca80.inc 
+TI              .EQ     $00000007   RefCount=  0, Mem=Code, Source=ca80.inc 
+USER8255        .EQ     $000000E0   RefCount=  0, Mem=Code, Source=ca80.inc 

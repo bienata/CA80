@@ -26,6 +26,7 @@ CI          .eq $FFC6   ; CI - pobranie znaku z klawiatury
 CO          .eq $01E0   ; CO - wyswietlenie cyfry hex
 TI          .eq $0007   ; TI - pobranie znaku z echem
 PARAM       .eq $01F4   ; PARAM - pobranie liczby 16-bit do HL z echem
+HILO        .eq $023b   ; HILO - iterator, HL++, CY = !(DE >= HL)
             ;
 EOM         .eq $FF            
 

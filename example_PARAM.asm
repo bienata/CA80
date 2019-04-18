@@ -18,7 +18,6 @@ ADDR_HI .eq 1
         jr NC,.begin                ; jak nie [=] to kontynuuj
         ; po [=] w HL mamy wprowadzony 16 bit adres
         ld A,H
-        and $C0             ; zostaw dwa najstarsze bity
         rlca                ; z wartości NNxx.xxxx zawijamy
         rlca                ; << i jest xxxx.xxNN    
         and $03             ; 
