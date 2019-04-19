@@ -13,18 +13,18 @@ CODE_EQU    .eq     $48             ; =
 		call CLR                    
 		.db $80                     ; na cały wyświetlacz
         call CI                     ; pobierz znaczek z kbd
-        jr Z,.dotOrEual             ; [.] lub [=]
+        jr Z,.dotOrEqual             ; [.] lub [=]
         ;cała raszta, kod znaku jest w Aku :)
         call LBYTE
         .db $20
         call delay
         jr .begin
         ; obsluga .=
-.dotOrEual:        
+.dotOrEqual:        
         ld  C,CODE_EQU       ; może ustaw =
-        jr  C,.dotOrEualNext
+        jr  C,.dotOrEqualNext
         ld  C,CODE_DOT       ; a jednak ustaw .
-.dotOrEualNext        
+.dotOrEqualNext        
         call COM             ; pokaż kod 7-seg
         .db $10
         call delay

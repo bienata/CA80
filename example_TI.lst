@@ -27,10 +27,12 @@ FFC3-            I    24       CSTS        .eq $FFC3   ; CSTS - test czy klawisz
 FFC6-            I    25       CI          .eq $FFC6   ; CI - pobranie znaku z klawiatury
 01E0-            I    26       CO          .eq $01E0   ; CO - wyswietlenie cyfry hex
 0007-            I    27       TI          .eq $0007   ; TI - pobranie znaku z echem
-0000-            I    28                   ;
-00FF-            I    29       EOM         .eq $FF
-0000-            I    30
-0000-            I    31
+01F4-            I    28       PARAM       .eq $01F4   ; PARAM - pobranie liczby 16-bit do HL z echem
+023B-            I    29       HILO        .eq $023b   ; HILO - iterator, HL++, CY = !(DE >= HL)
+0000-            I    30                   ;
+00FF-            I    31       EOM         .eq $FF
+0000-            I    32
+0000-            I    33
 0000-                  6               .sm code                    ;
 C000-                  7               .or $c000                   ; U12/C000
 C000-                  8               ;
@@ -40,14 +42,14 @@ C000-31 66 FF         11 ( 10)                 ld  SP,$ff66                ;
 C003-                 12       .begin
 C003-CD 07 00         13 ( 17)         call TI                     ; pobierz znaczek z kbd
 C006-10               14               .db $10                     ; echo na prawej pozycji
-C007-28 02            15 ( 7+)         jr Z,.dotOrEual             ; [.] lub [=]
+C007-28 02            15 ( 7+)         jr Z,.dotOrEqual             ; [.] lub [=]
 C009-18 F8            16 ( 12)         jr .begin
 C00B-                 17               ; obsluga .=
-C00B-                 18       .dotOrEual:
+C00B-                 18       .dotOrEqual:
 C00B-0E 48            19 (  7)         ld  C,CODE_EQU       ; może ustaw =
-C00D-38 02            20 ( 7+)         jr  C,.dotOrEualNext
+C00D-38 02            20 ( 7+)         jr  C,.dotOrEqualNext
 C00F-0E 80            21 (  7)         ld  C,CODE_DOT       ; a jednak ustaw .
-C011-                 22       .dotOrEualNext
+C011-                 22       .dotOrEqualNext
 C011-CD 10 00         23 ( 17)         call CLR
 C014-10               24               .db $10
 C015-CD AB 01         25 ( 17)         call COM             ; pokaż kod 7-seg

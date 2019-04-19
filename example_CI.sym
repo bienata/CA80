@@ -4,8 +4,8 @@ CO              .EQ     $000001E0   RefCount=  0, Mem=Code, Source=ca80.inc
 CODE_DOT        .EQ     $00000080   RefCount=  1, Mem=Code, Source=example_CI.asm 
 CODE_EQU        .EQ     $00000048   RefCount=  1, Mem=Code, Source=example_CI.asm 
 .BEGIN          .EQ     $0000C003   RefCount=  2, Mem=Code, Source=example_CI.asm 
-.DOTOREUALNEXT  .EQ     $0000C01B   RefCount=  1, Mem=Code, Source=example_CI.asm 
-.DOTOREUAL      .EQ     $0000C015   RefCount=  1, Mem=Code, Source=example_CI.asm 
+.DOTOREQUALNEXT .EQ     $0000C01B   RefCount=  1, Mem=Code, Source=example_CI.asm 
+.DOTOREQUAL     .EQ     $0000C015   RefCount=  1, Mem=Code, Source=example_CI.asm 
 COM             .EQ     $000001AB   RefCount=  1, Mem=Code, Source=ca80.inc 
 CSTS            .EQ     $0000FFC3   RefCount=  0, Mem=Code, Source=ca80.inc 
 CTRL            .EQ     $00000003   RefCount=  0, Mem=Code, Source=ca80.inc 
@@ -22,10 +22,13 @@ DELAY           .EQ     $0000C024   RefCount=  2, Mem=Code, Source=example_CI.as
 .DELAY          .EQ     $0000C028   RefCount=  1, Mem=Code, Source=example_CI.asm 
 EOM             .EQ     $000000FF   RefCount=  0, Mem=Code, Source=ca80.inc 
 EXPR            .EQ     $00000213   RefCount=  0, Mem=Code, Source=ca80.inc 
+HILO            .EQ     $0000023B   RefCount=  0, Mem=Code, Source=ca80.inc 
 LADR            .EQ     $00000020   RefCount=  0, Mem=Code, Source=ca80.inc 
 LBYTE           .EQ     $00000018   RefCount=  1, Mem=Code, Source=ca80.inc 
 PA              .EQ     $00000000   RefCount=  0, Mem=Code, Source=ca80.inc 
+PARAM           .EQ     $000001F4   RefCount=  0, Mem=Code, Source=ca80.inc 
 PB              .EQ     $00000001   RefCount=  0, Mem=Code, Source=ca80.inc 
 PC              .EQ     $00000002   RefCount=  0, Mem=Code, Source=ca80.inc 
 PRINT           .EQ     $000001D4   RefCount=  0, Mem=Code, Source=ca80.inc 
+TI              .EQ     $00000007   RefCount=  0, Mem=Code, Source=ca80.inc 
 USER8255        .EQ     $000000E0   RefCount=  0, Mem=Code, Source=ca80.inc 

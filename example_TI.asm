@@ -12,14 +12,14 @@ CODE_EQU    .eq     $48             ; =
 .begin	
         call TI                     ; pobierz znaczek z kbd
         .db $10                     ; echo na prawej pozycji
-        jr Z,.dotOrEual             ; [.] lub [=]
+        jr Z,.dotOrEqual             ; [.] lub [=]
         jr .begin
         ; obsluga .=
-.dotOrEual:        
+.dotOrEqual:        
         ld  C,CODE_EQU       ; może ustaw =
-        jr  C,.dotOrEualNext
+        jr  C,.dotOrEqualNext
         ld  C,CODE_DOT       ; a jednak ustaw .
-.dotOrEualNext        
+.dotOrEqualNext        
         call CLR
         .db $10
         call COM             ; pokaż kod 7-seg
