@@ -5,6 +5,21 @@ PB			.eq		1
 PC			.eq		2
 CTRL		.eq		3
 			;			
+
+
+Z80SIO      .eq     $E8        
+SIO_A_DAT   .eq     Z80SIO+0
+SIO_B_DAT   .eq     Z80SIO+1
+SIO_A_CMD   .eq     Z80SIO+2
+SIO_B_CMD   .eq     Z80SIO+3
+
+Z80CTC      .eq     $F8		
+CTC_CH0     .eq     Z80CTC+0
+CTC_CH1     .eq     Z80CTC+1
+CTC_CH2     .eq     Z80CTC+2
+CTC_CH3     .eq     Z80CTC+3
+
+
 CYF0	    .eq	$FFF7
 CYF1	    .eq	$FFF8
 CYF2	    .eq	$FFF9
