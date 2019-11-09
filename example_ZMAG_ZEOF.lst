@@ -1,0 +1,78 @@
+0000-                  4               .sf example_ZMAG_ZEOF.sym
+0000-                  5               .in ca80.inc
+0000-            I     1                               ; ciagle uzupelniam ...
+00E0-            I     2       USER8255        .eq             $E0
+0000-            I     3       PA                      .eq             0
+0001-            I     4       PB                      .eq             1
+0002-            I     5       PC                      .eq             2
+0003-            I     6       CTRL            .eq             3
+0000-            I     7                               ;
+0000-            I     8
+0000-            I     9
+00E8-            I    10       Z80SIO      .eq     $E8
+00E8-            I    11       SIO_A_DAT   .eq     Z80SIO+0
+00E9-            I    12       SIO_B_DAT   .eq     Z80SIO+1
+00EA-            I    13       SIO_A_CMD   .eq     Z80SIO+2
+00EB-            I    14       SIO_B_CMD   .eq     Z80SIO+3
+0000-            I    15
+00F8-            I    16       Z80CTC      .eq     $F8
+00F8-            I    17       CTC_CH0     .eq     Z80CTC+0
+00F9-            I    18       CTC_CH1     .eq     Z80CTC+1
+00FA-            I    19       CTC_CH2     .eq     Z80CTC+2
+00FB-            I    20       CTC_CH3     .eq     Z80CTC+3
+0000-            I    21
+0000-            I    22
+FFF7-            I    23       CYF0        .eq $FFF7
+FFF8-            I    24       CYF1        .eq $FFF8
+FFF9-            I    25       CYF2        .eq $FFF9
+FFFA-            I    26       CYF3        .eq $FFFA
+FFFB-            I    27       CYF4        .eq $FFFB
+FFFC-            I    28       CYF5        .eq $FFFC
+FFFD-            I    29       CYF6        .eq $FFFD
+FFFE-            I    30       CYF7        .eq $FFFE
+0000-            I    31
+0010-            I    32       CLR                 .eq $0010   ; CLR - kasowanie wyswietlacza
+0018-            I    33       LBYTE       .eq $0018   ; LBYTE - wyswietlenie Aku w HEX
+0020-            I    34       LADR        .eq $0020   ; LADR - wyswietlenie HL w HEX
+022D-            I    35       CZAS        .eq $022D   ; CZAS - pokazuje czas/date
+01AB-            I    36       COM                 .eq $01AB   ; COM - pokazuje znak 7-seg z rejestru C
+01D4-            I    37       PRINT       .eq $01D4   ; PRINT - drukuje komunikat z (HL)
+0213-            I    38       EXPR        .eq $0213   ; EXPR - pobranie ciagu liczb 16bit na stos
+FFC3-            I    39       CSTS        .eq $FFC3   ; CSTS - test czy klawisz nacisniety
+FFC6-            I    40       CI          .eq $FFC6   ; CI - pobranie znaku z klawiatury
+01E0-            I    41       CO          .eq $01E0   ; CO - wyswietlenie cyfry hex
+0007-            I    42       TI          .eq $0007   ; TI - pobranie znaku z echem
+01F4-            I    43       PARAM       .eq $01F4   ; PARAM - pobranie liczby 16-bit do HL z echem
+023B-            I    44       HILO        .eq $023b   ; HILO - iterator, HL++, CY = !(DE >= HL)
+0626-            I    45       ZMAG        .eq $0626   ; zapis bloku pamięci na magnetofon
+067B-            I    46       ZEOF        .eq $067b   ; zapis rekordu EOF
+071B-            I    47       OMAG        .eq $071B   ; odczyt bloku danych lub EOF-a o zadanej nazwie pod adres zapisany w zbiorze
+0000-            I    48                   ;
+00FF-            I    49       EOM         .eq $FF
+0000-            I    50
+0000-            I    51
+0000-                  6               .sm code                    ;
+C000-                  7               .or $c000                   ; U12/C000
+C000-                  8               ;
+C000-31 66 FF          9 ( 10)                 ld  SP,$ff66                ;
+C003-                 10
+C003-06 AA            11 (  7)         ld B,$AA                    ; nazwa zbioru
+C005-21 00 D0         12 ( 10)         ld HL,data                  ; adres początkowy
+C008-11 0F D0         13 ( 10)         ld DE,dataEnd-1             ; adres końcowy (ostatniego bajtu bloku)
+C00B-CD 26 06         14 ( 17)                 call ZMAG                    ; zapisz blok
+C00E-                 15                       ;
+C00E-06 AA            16 (  7)                 ld B,$AA                  ; nazwa zbioru
+C010-21 34 12         17 ( 10)                 ld HL,$1234               ; adres wejścia (wartość PC użytkownika w zleceniu *G)
+C013-CD 7B 06         18 ( 17)                 call ZEOF                 ; zapisz EOF
+C016-                 19               ;
+C016-F7               20 ( 11)         rst $30                     ; powrót do Monitora
+C017-                 21
+D000                 22                       .no $d000
+D000-                 23       data:
+D000-00 11 22 33 
+     44 55 66 77      24               .db $00,$11,$22,$33,$44,$55,$66,$77
+D008-88 99 AA BB 
+     CC DD EE FF      25               .db $88,$99,$AA,$BB,$CC,$DD,$EE,$FF
+D010-                 26       dataEnd:
+D010-                 27                       ;
+D010-                 28
