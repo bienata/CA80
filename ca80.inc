@@ -42,6 +42,9 @@ CO          .eq $01E0   ; CO - wyswietlenie cyfry hex
 TI          .eq $0007   ; TI - pobranie znaku z echem
 PARAM       .eq $01F4   ; PARAM - pobranie liczby 16-bit do HL z echem
 HILO        .eq $023b   ; HILO - iterator, HL++, CY = !(DE >= HL)
+ZMAG        .eq $0626   ; zapis bloku pamięci na magnetofon
+ZEOF        .eq $067b   ; zapis rekordu EOF 
+OMAG        .eq $071B   ; odczyt bloku danych lub EOF-a o zadanej nazwie pod adres zapisany w zbiorze
             ;
 EOM         .eq $FF            
 
